@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 
 namespace GameOfAnza_WindowForm_
 {
@@ -14,6 +15,8 @@ namespace GameOfAnza_WindowForm_
 		[STAThread]
 		static void Main()
 		{
+			HttpNetwork httpMessenger = new HttpNetwork();
+
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new Form1());
