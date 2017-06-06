@@ -28,17 +28,17 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.textBox1 = new System.Windows.Forms.TextBox();
+			this.SearchBox = new System.Windows.Forms.TextBox();
 			this.SearchInstLabel = new System.Windows.Forms.Label();
 			this.SearchButton = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
-			// textBox1
+			// SearchBox
 			// 
-			this.textBox1.Location = new System.Drawing.Point(26, 34);
-			this.textBox1.Name = "textBox1";
-			this.textBox1.Size = new System.Drawing.Size(206, 21);
-			this.textBox1.TabIndex = 0;
+			this.SearchBox.Location = new System.Drawing.Point(26, 34);
+			this.SearchBox.Name = "SearchBox";
+			this.SearchBox.Size = new System.Drawing.Size(206, 21);
+			this.SearchBox.TabIndex = 0;
 			// 
 			// SearchInstLabel
 			// 
@@ -66,7 +66,7 @@
 			this.ClientSize = new System.Drawing.Size(1184, 761);
 			this.Controls.Add(this.SearchButton);
 			this.Controls.Add(this.SearchInstLabel);
-			this.Controls.Add(this.textBox1);
+			this.Controls.Add(this.SearchBox);
 			this.Name = "Form1";
 			this.Text = "Game Of Anza";
 			this.ResumeLayout(false);
@@ -76,7 +76,7 @@
 
 		#endregion
 
-		private System.Windows.Forms.TextBox textBox1;
+		private System.Windows.Forms.TextBox SearchBox;
 		private System.Windows.Forms.Label SearchInstLabel;
 		private System.Windows.Forms.Button SearchButton;
 	}

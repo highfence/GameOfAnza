@@ -12,6 +12,8 @@ namespace GameOfAnza_WindowForm_
 {
 	public partial class Form1 : Form
 	{
+		private string searchStr;
+
 		public Form1()
 		{
 			InitializeComponent();
@@ -19,7 +21,9 @@ namespace GameOfAnza_WindowForm_
 
 		private void SearchButton_Click(object sender, EventArgs e)
 		{
+			searchStr = SearchBox.Text;
 
+			HttpNetwork.GetInstance().GetBusRouteList(searchStr);
 		}
 	}
 }
