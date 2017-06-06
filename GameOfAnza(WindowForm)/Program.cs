@@ -15,7 +15,7 @@ namespace GameOfAnza_WindowForm_
 		[STAThread]
 		static void Main()
 		{
-			HttpNetwork httpMessenger = new HttpNetwork();
+			HttpNetwork httpMessenger = HttpNetwork.GetInstance();
 
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);

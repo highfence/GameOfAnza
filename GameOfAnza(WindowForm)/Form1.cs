@@ -16,5 +16,10 @@ namespace GameOfAnza_WindowForm_
 		{
 			InitializeComponent();
 		}
+
+		private void SearchButton_Click(object sender, EventArgs e)
+		{
+
+		}
 	}
 }

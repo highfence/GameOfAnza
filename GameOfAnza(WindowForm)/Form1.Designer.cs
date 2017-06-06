@@ -28,12 +28,57 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.components = new System.ComponentModel.Container();
+			this.textBox1 = new System.Windows.Forms.TextBox();
+			this.SearchInstLabel = new System.Windows.Forms.Label();
+			this.SearchButton = new System.Windows.Forms.Button();
+			this.SuspendLayout();
+			// 
+			// textBox1
+			// 
+			this.textBox1.Location = new System.Drawing.Point(26, 34);
+			this.textBox1.Name = "textBox1";
+			this.textBox1.Size = new System.Drawing.Size(206, 21);
+			this.textBox1.TabIndex = 0;
+			// 
+			// SearchInstLabel
+			// 
+			this.SearchInstLabel.AutoSize = true;
+			this.SearchInstLabel.Location = new System.Drawing.Point(12, 12);
+			this.SearchInstLabel.Name = "SearchInstLabel";
+			this.SearchInstLabel.Size = new System.Drawing.Size(169, 12);
+			this.SearchInstLabel.TabIndex = 1;
+			this.SearchInstLabel.Text = "찾으시는 노선을 입력해주세요";
+			// 
+			// SearchButton
+			// 
+			this.SearchButton.Location = new System.Drawing.Point(238, 34);
+			this.SearchButton.Name = "SearchButton";
+			this.SearchButton.Size = new System.Drawing.Size(75, 23);
+			this.SearchButton.TabIndex = 2;
+			this.SearchButton.Text = "Search";
+			this.SearchButton.UseVisualStyleBackColor = true;
+			this.SearchButton.Click += new System.EventHandler(this.SearchButton_Click);
+			// 
+			// Form1
+			// 
+			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.Text = "Form1";
+			this.ClientSize = new System.Drawing.Size(1184, 761);
+			this.Controls.Add(this.SearchButton);
+			this.Controls.Add(this.SearchInstLabel);
+			this.Controls.Add(this.textBox1);
+			this.Name = "Form1";
+			this.Text = "Game Of Anza";
+			this.ResumeLayout(false);
+			this.PerformLayout();
+
 		}
 
 		#endregion
+
+		private System.Windows.Forms.TextBox textBox1;
+		private System.Windows.Forms.Label SearchInstLabel;
+		private System.Windows.Forms.Button SearchButton;
 	}
 }
 
