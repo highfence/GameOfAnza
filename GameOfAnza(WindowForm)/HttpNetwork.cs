@@ -160,7 +160,6 @@ namespace GameOfAnza_WindowForm_
 		/*
 		 * 노선의 이름을 넣으면
 		 * 찾는 노선의 ID를 반환해주는 메소드. 
-		 * 이 기능은 xml 파일을 따로 만들어서 그냥 Request가 아니라 파일 접근으로 처리해버려도 괜찮겠다 싶음.
 		 */
 		public int GetBusRouteList(string stationName)
 		{
@@ -198,6 +197,46 @@ namespace GameOfAnza_WindowForm_
 		{
 			if (busRouteId == -1) return -1;
 
+			// 버스 아이디로 Http 요청을 보냄.
+			string routeInfoString = HttpRequest(APICODE.GET_ROUTE_INFO, busRouteId.ToString(), false);
+			if (routeInfoString == null) return -1;
+
+			// 받은 응답을 XmlDocumnet로 로드.
+			XmlDocument xmlDoc = new XmlDocument();
+			xmlDoc.LoadXml(routeInfoString);
+
+			// Xml 파일을 파싱하여 원하는 Route의 정보 찾기.
+			XmlNodeList xmlNodeList = xmlDoc.SelectNodes("ServiceResult/msgBody/itemList");
+
+			foreach (XmlNode xn in xmlNodeList)
+			{
+				if (busRouteId.ToString() == xn["busRouteId"].InnerText)
+				{
+					// 찾는 정보를 찾았으므로, 배차 간격을 이용하여 계산해준다.
+					string firstBusTimeString = xn["firstBusTm"].InnerText;
+					string lastBusTimeString = xn["lastBusTm"].InnerText;
+					// 받은 정보를 DateTime 형으로 파싱.
+					DateTime firstBusTime = new DateTime(
+						Convert.ToInt32(firstBusTimeString.Substring(0, 4)),
+						Convert.ToInt32(firstBusTimeString.Substring(4, 2)),
+						Convert.ToInt32(firstBusTimeString.Substring(6, 2)),
+						Convert.ToInt32(firstBusTimeString.Substring(8, 2)),
+						Convert.ToInt32(firstBusTimeString.Substring(10, 2)),
+						Convert.ToInt32(firstBusTimeString.Substring(12, 2)));
+
+					DateTime lastBusTime = new DateTime(
+						Convert.ToInt32(lastBusTimeString.Substring(0, 4)),
+						Convert.ToInt32(lastBusTimeString.Substring(4, 2)),
+						Convert.ToInt32(lastBusTimeString.Substring(6, 2)),
+						Convert.ToInt32(lastBusTimeString.Substring(8, 2)),
+						Convert.ToInt32(lastBusTimeString.Substring(10, 2)),
+						Convert.ToInt32(lastBusTimeString.Substring(12, 2)));
+
+					int term = Convert.ToInt32(xn["term"].InnerText);
+				}
+			}
+			
+			// 찾는 RouteId에 해당하는 정보가 없음.
 			return -1;
 		}
 	}
