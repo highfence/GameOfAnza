@@ -216,43 +216,43 @@ namespace GameOfAnza_WindowForm_
 			// Xml 파일을 파싱하여 원하는 Route의 정보 찾기.
 			XmlNodeList xmlNodeList = xmlDoc.SelectNodes("ServiceResult/msgBody/itemList");
 
-			foreach (XmlNode xn in xmlNodeList)
+			var findRouteInfo = from XmlNode xn in xmlNodeList
+								where xn["busRouteId"].InnerText == busRouteId.ToString()
+								select xn;
+
+			if (findRouteInfo.Any())
 			{
-				if (busRouteId.ToString() == xn["busRouteId"].InnerText)
-				{
-					// 찾는 정보를 찾았으므로, 배차 간격을 이용하여 계산해준다.
-					string firstBusTimeString = xn["firstBusTm"].InnerText;
-					string lastBusTimeString = xn["lastBusTm"].InnerText;
+				var xn = findRouteInfo.First();
+				string firstBusTimeString = xn["firstBusTm"].InnerText;
+				string lastBusTimeString = xn["lastBusTm"].InnerText;
 
-					// 받은 정보를 DateTime 형으로 파싱.
-					DateTime firstBusTime = new DateTime(
-						Convert.ToInt32(firstBusTimeString.Substring(0, 4)),
-						Convert.ToInt32(firstBusTimeString.Substring(4, 2)),
-						Convert.ToInt32(firstBusTimeString.Substring(6, 2)),
-						Convert.ToInt32(firstBusTimeString.Substring(8, 2)),
-						Convert.ToInt32(firstBusTimeString.Substring(10, 2)),
-						Convert.ToInt32(firstBusTimeString.Substring(12, 2)));
+				// 받은 정보를 DateTime 형으로 파싱.
+				DateTime firstBusTime = new DateTime(
+					Convert.ToInt32(firstBusTimeString.Substring(0, 4)),
+					Convert.ToInt32(firstBusTimeString.Substring(4, 2)),
+					Convert.ToInt32(firstBusTimeString.Substring(6, 2)),
+					Convert.ToInt32(firstBusTimeString.Substring(8, 2)),
+					Convert.ToInt32(firstBusTimeString.Substring(10, 2)),
+					Convert.ToInt32(firstBusTimeString.Substring(12, 2)));
 
-					DateTime lastBusTime = new DateTime(
-						Convert.ToInt32(lastBusTimeString.Substring(0, 4)),
-						Convert.ToInt32(lastBusTimeString.Substring(4, 2)),
-						Convert.ToInt32(lastBusTimeString.Substring(6, 2)),
-						Convert.ToInt32(lastBusTimeString.Substring(8, 2)),
-						Convert.ToInt32(lastBusTimeString.Substring(10, 2)),
-						Convert.ToInt32(lastBusTimeString.Substring(12, 2)));
+				DateTime lastBusTime = new DateTime(
+					Convert.ToInt32(lastBusTimeString.Substring(0, 4)),
+					Convert.ToInt32(lastBusTimeString.Substring(4, 2)),
+					Convert.ToInt32(lastBusTimeString.Substring(6, 2)),
+					Convert.ToInt32(lastBusTimeString.Substring(8, 2)),
+					Convert.ToInt32(lastBusTimeString.Substring(10, 2)),
+					Convert.ToInt32(lastBusTimeString.Substring(12, 2)));
 
-					// 파싱받은 시간의 차이를 구하고 Term 정보로 나누어준다.
-					TimeSpan busDriveRange = lastBusTime.Subtract(firstBusTime);
-					int busDriveRangeInMinute = busDriveRange.Hours * 60 + busDriveRange.Minutes;
-					int term = Convert.ToInt32(xn["term"].InnerText);
+				// 파싱받은 시간의 차이를 구하고 Term 정보로 나누어준다.
+				TimeSpan busDriveRange = lastBusTime.Subtract(firstBusTime);
+				int busDriveRangeInMinute = busDriveRange.Hours * 60 + busDriveRange.Minutes;
+				int term = Convert.ToInt32(xn["term"].InnerText);
 
-					int dayBusDriveNm = busDriveRangeInMinute / term;
-					return dayBusDriveNm;
-				}
+				int dayBusDriveNm = busDriveRangeInMinute / term;
+				return dayBusDriveNm;
 			}
-			
-			// 찾는 RouteId에 해당하는 정보가 없음.
-			return -1;
+			else
+				return -1;
 		}
 
 		/*
