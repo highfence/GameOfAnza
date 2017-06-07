@@ -23,7 +23,7 @@ namespace GameOfAnza_WindowForm_
 		{
 			searchStr = SearchBox.Text;
 
-			HttpNetwork.GetInstance().GetBusRouteList(searchStr);
+				HttpNetwork.GetInstance().GetBusRouteList(searchStr);
 		}
 	}
 }

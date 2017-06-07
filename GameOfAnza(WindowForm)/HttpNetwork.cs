@@ -26,7 +26,6 @@ namespace GameOfAnza_WindowForm_
 			{
 				_instance = new HttpNetwork();
 			}
-
 			return _instance;
 		}
 
@@ -47,7 +46,6 @@ namespace GameOfAnza_WindowForm_
 			INVALID_PARAM,
 			RESPONSE_EXCEPTION
 		}
-		
 
 		// API 관련 데이터들을 담을 구조체
 		private struct APIData
@@ -56,7 +54,6 @@ namespace GameOfAnza_WindowForm_
 			public string apiUrl;
 			public string apiParam;
 			public string apiServiceKey;
-
 			
 			// Http 요청을 위한 문자열을 데이터에서 뽑아내는 메소드.
 			public string GetRequestLine()
@@ -163,19 +160,19 @@ namespace GameOfAnza_WindowForm_
 		/*
 		 * 노선의 이름을 넣으면
 		 * 찾는 노선의 ID를 반환해주는 메소드. 
+		 * 이 기능은 xml 파일을 따로 만들어서 그냥 Request가 아니라 파일 접근으로 처리해버려도 괜찮겠다 싶음.
 		 */
 		public int GetBusRouteList(string stationName)
 		{
 			if (stationName == null) return -1;
 
 			// stationName으로 Http 요청을 보냄.
-			string returnString = HttpRequest(APICODE.GET_BUS_ROUTE_LIST, stationName, true);
-
-			if (returnString == null) return -1;
+			string routeListString = HttpRequest(APICODE.GET_BUS_ROUTE_LIST, stationName, true);
+			if (routeListString == null) return -1;
 
 			// 받은 응답을 XmlDocument로 로드.
 			XmlDocument xmlDoc = new XmlDocument();
-			xmlDoc.LoadXml(returnString);
+			xmlDoc.LoadXml(routeListString);
 
 			// Xml 파일을 파싱하여 원하는 Route의 아이디 찾기.
 			XmlNodeList xmlNodeList = xmlDoc.SelectNodes("ServiceResult/msgBody/itemList");
@@ -188,7 +185,20 @@ namespace GameOfAnza_WindowForm_
 				}
 			}
 
-			return 0;
+			// 찾는 노선이 없음.
+			return -1;
+		}
+
+		/*
+		 * 노선의 아이디 (BusRouteId)를 넣으면 하루에 할당된 배차량을 반환해주는 함수.
+		 * 정부 API의 GetRouteInfo를 이용.
+		 * 첫차시간과 막차시간의 차이를 배차간격으로 나눠준다.
+		 */
+		public int GetRouteDayDrivenNm(int busRouteId)
+		{
+			if (busRouteId == -1) return -1;
+
+			return -1;
 		}
 	}
 }
