@@ -74,6 +74,16 @@ namespace GameOfAnza_WindowForm_
 			}
 		}
 
+		// 노선에 속해있는 역 정보를 담을 구조체
+		public struct RouteStationInfo
+		{
+			int arsId;
+			int stationId;
+			string stationNm;
+			int seq;
+		}
+
+
 		// 정부 API 관련 데이터가 저장된 파일.
 		private string filePath = "C:/Users/NEXT/Desktop/Project/GameOfAnza(WindowForm)/GameOfAnza(WindowForm)/Resources/KeyValues.xml";
 		// 정부 API 관련 데이터를 저장할 구조체.
@@ -176,16 +186,14 @@ namespace GameOfAnza_WindowForm_
 			// Xml 파일을 파싱하여 원하는 Route의 아이디 찾기.
 			XmlNodeList xmlNodeList = xmlDoc.SelectNodes("ServiceResult/msgBody/itemList");
 
-			foreach (XmlNode xn in xmlNodeList)
-			{
-				if (stationName == xn["busRouteNm"].InnerText)
-				{
-					return Convert.ToInt32(xn["busRouteId"].InnerText);
-				}
-			}
+			var findBusRouteId = from XmlNode xn in xmlNodeList
+								 where xn["busRouteNm"].InnerText == stationName
+								 select Convert.ToInt32(xn["busRouteId"].InnerText);
 
-			// 찾는 노선이 없음.
-			return -1;
+			if (findBusRouteId.Any())
+				return findBusRouteId.First();
+			else
+				return -1;
 		}
 
 		/*
@@ -245,6 +253,16 @@ namespace GameOfAnza_WindowForm_
 			
 			// 찾는 RouteId에 해당하는 정보가 없음.
 			return -1;
+		}
+
+		/*
+		 * RouteId를 인자로 받아 해당하는 노선의 정보를 반환해주는 메소드.
+		 * RouteStationInfo 구조체를 반환한다.
+		 */
+		public RouteStationInfo GetStationsByRouteList(int routeId)
+		{
+			return new RouteStationInfo();
+
 		}
 	}
 }
