@@ -215,6 +215,7 @@ namespace GameOfAnza_WindowForm_
 					// 찾는 정보를 찾았으므로, 배차 간격을 이용하여 계산해준다.
 					string firstBusTimeString = xn["firstBusTm"].InnerText;
 					string lastBusTimeString = xn["lastBusTm"].InnerText;
+
 					// 받은 정보를 DateTime 형으로 파싱.
 					DateTime firstBusTime = new DateTime(
 						Convert.ToInt32(firstBusTimeString.Substring(0, 4)),
@@ -232,7 +233,13 @@ namespace GameOfAnza_WindowForm_
 						Convert.ToInt32(lastBusTimeString.Substring(10, 2)),
 						Convert.ToInt32(lastBusTimeString.Substring(12, 2)));
 
+					// 파싱받은 시간의 차이를 구하고 Term 정보로 나누어준다.
+					TimeSpan busDriveRange = lastBusTime.Subtract(firstBusTime);
+					int busDriveRangeInMinute = busDriveRange.Hours * 60 + busDriveRange.Minutes;
 					int term = Convert.ToInt32(xn["term"].InnerText);
+
+					int dayBusDriveNm = busDriveRangeInMinute / term;
+					return dayBusDriveNm;
 				}
 			}
 			
