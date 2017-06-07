@@ -77,10 +77,10 @@ namespace GameOfAnza_WindowForm_
 		// 노선에 속해있는 역 정보를 담을 구조체
 		public struct RouteStationInfo
 		{
-			int arsId;
-			int stationId;
-			string stationNm;
-			int seq;
+			public int arsId;
+			public int stationId;
+			public string stationNm;
+			public int seq;
 		}
 
 
@@ -257,12 +257,44 @@ namespace GameOfAnza_WindowForm_
 
 		/*
 		 * RouteId를 인자로 받아 해당하는 노선의 정보를 반환해주는 메소드.
-		 * RouteStationInfo 구조체를 반환한다.
+		 * RouteStationInfo 구조체의 리스트를 반환한다.
 		 */
-		public RouteStationInfo GetStationsByRouteList(int routeId)
+		public List<RouteStationInfo> GetStationsByRouteList(int routeId)
 		{
-			return new RouteStationInfo();
+			if (routeId == -1) return null;
 
+			// routeId로 Http 요청을 보냄.
+			string routeStationInfoString = HttpRequest(APICODE.GET_STATIONS_BY_ROUTE_LIST, routeId.ToString(), false);
+			if (routeStationInfoString == null) return null;
+
+			// 받은 응답을 XmlDocument로 로드.
+			XmlDocument xmlDoc = new XmlDocument();
+			xmlDoc.LoadXml(routeStationInfoString);
+
+			// Xml 파일을 파싱하여 원하는 정보 찾기.
+			XmlNodeList xmlNodeList = xmlDoc.SelectNodes("ServiceResult/msgBody/itemList");
+
+			var findStationInfo = from XmlNode xn in xmlNodeList
+								  where xn["busRouteId"].InnerText == routeId.ToString()
+								  select xn;
+
+			if (findStationInfo.Any())
+			{
+				List<RouteStationInfo> stationInfoList = new List<RouteStationInfo>();
+				foreach (var xn in findStationInfo)
+				{
+					RouteStationInfo stationInfo = new RouteStationInfo();
+					stationInfo.arsId = Convert.ToInt32(xn["arsId"].InnerText);
+					stationInfo.seq = Convert.ToInt32(xn["seq"].InnerText);
+					stationInfo.stationId = Convert.ToInt32(xn["station"].InnerText);
+					stationInfo.stationNm = xn["stationNm"].InnerText;
+
+					stationInfoList.Add(stationInfo);
+				}
+				return stationInfoList;
+			}
+			else
+				return null;
 		}
 	}
 }

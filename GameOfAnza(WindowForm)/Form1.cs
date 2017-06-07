@@ -25,6 +25,7 @@ namespace GameOfAnza_WindowForm_
 
 			int searchRouteId = HttpNetwork.GetInstance().GetBusRouteList(searchStr);
 			int searchRouteDayDriveNm = HttpNetwork.GetInstance().GetRouteDayDrivenNm(searchRouteId);
+			var list = HttpNetwork.GetInstance().GetStationsByRouteList(searchRouteId);
 		}
 	}
 }
