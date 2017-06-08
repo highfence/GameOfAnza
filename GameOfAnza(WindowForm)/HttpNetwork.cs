@@ -83,8 +83,8 @@ namespace GameOfAnza_WindowForm_
 			public int seq;
 			public int rideNum;
 			public int alightNum;
-			public int accRideNum;
-			public int accAlightNum;
+			public int remainPassenger;
+			public float averageRemainPassenger;
 		}
 
 
@@ -313,22 +313,31 @@ namespace GameOfAnza_WindowForm_
 
 			if (findStationInfo.Any())
 			{
-				List<RouteStationInfo> stationInfoList = new List<RouteStationInfo>();
-				foreach (var xn in findStationInfo)
+				try
 				{
-					RouteStationInfo stationInfo = new RouteStationInfo();
-					stationInfo.arsId = Convert.ToInt32(xn["arsId"].InnerText);
-					stationInfo.seq = Convert.ToInt32(xn["seq"].InnerText);
-					stationInfo.stationId = Convert.ToInt32(xn["station"].InnerText);
-					stationInfo.stationNm = xn["stationNm"].InnerText;
-					stationInfo.rideNum = 0;
-					stationInfo.alightNum = 0;
-					stationInfo.accRideNum = 0;
-					stationInfo.accAlightNum = 0;
+					List<RouteStationInfo> stationInfoList = new List<RouteStationInfo>();
+					foreach (var xn in findStationInfo)
+					{
+						RouteStationInfo stationInfo = new RouteStationInfo();
+						stationInfo.arsId = Convert.ToInt32(xn["arsId"].InnerText);
+						stationInfo.seq = Convert.ToInt32(xn["seq"].InnerText);
+						stationInfo.stationId = Convert.ToInt32(xn["station"].InnerText);
+						stationInfo.stationNm = xn["stationNm"].InnerText;
+						stationInfo.rideNum = 0;
+						stationInfo.alightNum = 0;
+						stationInfo.remainPassenger = 0;
+						stationInfo.averageRemainPassenger = 0;
 
-					stationInfoList.Add(stationInfo);
+						stationInfoList.Add(stationInfo);
+					}
+					return stationInfoList;
 				}
-				return stationInfoList;
+				catch
+				{
+					MessageBox.Show("정부 API 나빠요.");
+					return null;
+				}
+
 			}
 			else
 				return null;

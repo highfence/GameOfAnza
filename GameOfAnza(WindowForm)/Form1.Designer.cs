@@ -35,7 +35,11 @@
 			this.TabControl = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
+			this.AnzaImage = new System.Windows.Forms.PictureBox();
+			this.AnzaScoreLabel = new System.Windows.Forms.Label();
 			this.TabControl.SuspendLayout();
+			this.tabPage1.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.AnzaImage)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// SearchBox
@@ -88,12 +92,14 @@
 			// 
 			// tabPage1
 			// 
+			this.tabPage1.Controls.Add(this.AnzaScoreLabel);
+			this.tabPage1.Controls.Add(this.AnzaImage);
 			this.tabPage1.Location = new System.Drawing.Point(4, 22);
 			this.tabPage1.Name = "tabPage1";
 			this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
 			this.tabPage1.Size = new System.Drawing.Size(1138, 660);
 			this.tabPage1.TabIndex = 0;
-			this.tabPage1.Text = "tabPage1";
+			this.tabPage1.Text = "앉아점수";
 			this.tabPage1.UseVisualStyleBackColor = true;
 			// 
 			// tabPage2
@@ -103,8 +109,26 @@
 			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
 			this.tabPage2.Size = new System.Drawing.Size(1138, 660);
 			this.tabPage2.TabIndex = 1;
-			this.tabPage2.Text = "tabPage2";
+			this.tabPage2.Text = "노선별 점수";
 			this.tabPage2.UseVisualStyleBackColor = true;
+			// 
+			// AnzaImage
+			// 
+			this.AnzaImage.Location = new System.Drawing.Point(182, 32);
+			this.AnzaImage.Name = "AnzaImage";
+			this.AnzaImage.Size = new System.Drawing.Size(175, 175);
+			this.AnzaImage.TabIndex = 0;
+			this.AnzaImage.TabStop = false;
+			// 
+			// AnzaScoreLabel
+			// 
+			this.AnzaScoreLabel.AutoSize = true;
+			this.AnzaScoreLabel.Font = new System.Drawing.Font("D2Coding", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.AnzaScoreLabel.Location = new System.Drawing.Point(409, 94);
+			this.AnzaScoreLabel.Name = "AnzaScoreLabel";
+			this.AnzaScoreLabel.Size = new System.Drawing.Size(168, 55);
+			this.AnzaScoreLabel.TabIndex = 1;
+			this.AnzaScoreLabel.Text = "label1";
 			// 
 			// Form1
 			// 
@@ -119,6 +143,9 @@
 			this.Name = "Form1";
 			this.Text = "Game Of Anza";
 			this.TabControl.ResumeLayout(false);
+			this.tabPage1.ResumeLayout(false);
+			this.tabPage1.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.AnzaImage)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -133,6 +160,8 @@
 		private System.Windows.Forms.TabControl TabControl;
 		private System.Windows.Forms.TabPage tabPage1;
 		private System.Windows.Forms.TabPage tabPage2;
+		private System.Windows.Forms.Label AnzaScoreLabel;
+		private System.Windows.Forms.PictureBox AnzaImage;
 	}
 }
 

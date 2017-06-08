@@ -123,22 +123,56 @@ namespace GameOfAnza_WindowForm_
 			return list;
 		}
 
-		// 인자로 받은 정류장 ID의 승, 하차 인원을 반환하는 메소드.
-		public Tuple<int, int> FindPassengerNumberWithStationId(int stationId)
+		// 인자로 받은 노선이름과 정류장 ID의 승, 하차 인원을 반환하는 메소드.
+		public Tuple<int, int> FindPassengerNumberWithStationId(string routeNm, int stationId)
 		{
-			var filter = Builders<BsonDocument>.Filter.Eq("STND_BSST_ID", stationId);
-			var list = _collection.Find(filter).ToList();
+			// 역 Id searching을 도와줄 filter
+			var stationFilter = Builders<BsonDocument>.Filter.Eq("STND_BSST_ID", stationId);
+			// routeNm이 한글을 포함했는지 검사.
+			FilterDefinition<BsonDocument> routeFilter;
+			if (IsContainHangul(routeNm))
+			{
+				// 한글을 포함했다면 string 값 그대로 필터.
+				routeFilter = Builders<BsonDocument>.Filter.Eq("BUS_ROUTE_NO", routeNm);
+			}
+			else
+			{
+				// 숫자로만 이루어졌다면 int값으로 필터.
+				routeFilter = Builders<BsonDocument>.Filter.Eq("BUS_ROUTE_NO", Convert.ToInt32(routeNm));
+			}
+
+			var list = _collection.Find(stationFilter & routeFilter).ToList();
 			int totalRidePassenger = 0;
 			int totalAlightPassenger = 0;
 
 			foreach (var dataLog in list)
 			{
-				var a = dataLog.GetElement(7).Value;
-				// totalRidePassenger += dataLog
-				// totalAlightPassenger += dataLog.ALIGHT_PASGR_NUM;
+				totalRidePassenger += (int)dataLog.GetElement(7).Value;
+				totalAlightPassenger += (int)dataLog.GetElement(8).Value;
 			}
 
 			return new Tuple<int, int>(totalRidePassenger, totalAlightPassenger);
+		}
+
+		/*
+		 * goo.gl/uOelSc 블로그의 코드.
+		 * string에 한글이 포함되어있는지 체크해주는 함수.
+		 */
+		public bool IsContainHangul(string str)
+		{
+			char[] charArray = str.ToCharArray();
+			// 한글이 있는지 한 글자씩 검사.
+			foreach (char c in charArray)
+			{
+				// 있다면 true 반환.
+				if (char.GetUnicodeCategory(c) == System.Globalization.UnicodeCategory.OtherLetter)
+				{
+					return true;
+				}
+			}
+
+			// 없다면 false 반환.
+			return false;
 		}
 	}
 }
