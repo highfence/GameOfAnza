@@ -18,10 +18,25 @@ namespace GameOfAnza_WindowForm_
 		{
 			InitializeComponent();
 
+			// 싱글톤 클래스들 초기화.
 			MongoDBManager.GetInstance();
+			HttpNetwork.GetInstance();
 		}
 
 		private void SearchButton_Click(object sender, EventArgs e)
+		{
+			SearchStart();
+		}
+
+		private void SearchBox_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.KeyCode == Keys.Enter)
+			{
+				SearchStart();
+			}
+		}
+
+		private void SearchStart()
 		{
 			searchStr = SearchBox.Text;
 

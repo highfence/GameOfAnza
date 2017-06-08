@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Xml;
 
 namespace GameOfAnza_WindowForm_
@@ -26,6 +27,7 @@ namespace GameOfAnza_WindowForm_
 			return _instance;
 		}
 
+		// MongoDB에서 받아온 데이터를 담아둘 구조체.
 		public class InOutData
 		{
 			public ObjectId _id { get; set; }
@@ -40,7 +42,6 @@ namespace GameOfAnza_WindowForm_
 		}
 
 		// 데이터 베이스 관련 데이터가 저장된 파일.
-		//private string xmlfilePath = "C:/Users/NEXT/Desktop/Project/GameOfAnza(WindowForm)/Resources/Database.xml";
 		private string xmlfilePath = "../../Resources/database.xml";
 
 		/*
@@ -50,19 +51,28 @@ namespace GameOfAnza_WindowForm_
 		 */
 		protected MongoDBManager()
 		{
-			XmlDocument dbXml = new XmlDocument();
-			dbXml.Load(xmlfilePath);
+			try
+			{
+				XmlDocument dbXml = new XmlDocument();
+				dbXml.Load(xmlfilePath);
 
-			XmlNodeList xmlNodeList = dbXml.SelectNodes("DatabaseInfo");
-			XmlNode xn = xmlNodeList.Item(0);
+				XmlNodeList xmlNodeList = dbXml.SelectNodes("DatabaseInfo");
+				XmlNode xn = xmlNodeList.Item(0);
 
-			_database = xn["_database"].InnerText;
-			_user = xn["_user"].InnerText;
-			_pwd = xn["_pwd"].InnerText;
-			_serverIp = xn["_serverIp"].InnerText;
-			_port = Convert.ToInt32(xn["_port"].InnerText);
+				_database = xn["_database"].InnerText;
+				_user = xn["_user"].InnerText;
+				_pwd = xn["_pwd"].InnerText;
+				_serverIp = xn["_serverIp"].InnerText;
+				_port = Convert.ToInt32(xn["_port"].InnerText);
 
-			Connect();
+				Connect();
+			}
+			catch
+			{
+				MessageBox.Show("MongoDBManager Creation Failed!");
+
+			}
+
 		}
 
 		// MongoDB variables
@@ -77,22 +87,31 @@ namespace GameOfAnza_WindowForm_
 		private MongoClient _mongoClient;
 		private IMongoDatabase _mongoDatabase;
 
+		// Xml파일에 기록된 정보에 따라 접속을 시도하는 메소드.
 		private bool Connect()
 		{
-			_credential = MongoCredential.CreateCredential(_database, _user, _pwd);
-
-			_settings = new MongoClientSettings
+			try
 			{
-				Credentials = new[] { _credential },
-				Server = new MongoServerAddress(_serverIp, _port)
-			};
+				_credential = MongoCredential.CreateCredential(_database, _user, _pwd);
 
-			_mongoClient = new MongoClient(_settings);
-			_mongoDatabase = _mongoClient.GetDatabase(_database);
+				_settings = new MongoClientSettings
+				{
+					Credentials = new[] { _credential },
+					Server = new MongoServerAddress(_serverIp, _port)
+				};
 
-			return true;
+				_mongoClient = new MongoClient(_settings);
+				_mongoDatabase = _mongoClient.GetDatabase(_database);
+
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
 		}
 
+		// STND_BSSN_ID로 검색한 결과는 List<InOutData> 형태로 반환하는 메소드.
 		public List<InOutData> FindWithStationId(int stationId)
 		{
 			var collection = _mongoDatabase.GetCollection<InOutData>("bus_in_out");

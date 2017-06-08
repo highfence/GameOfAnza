@@ -39,6 +39,7 @@
 			this.SearchBox.Name = "SearchBox";
 			this.SearchBox.Size = new System.Drawing.Size(206, 21);
 			this.SearchBox.TabIndex = 0;
+			this.SearchBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SearchBox_KeyDown);
 			// 
 			// SearchInstLabel
 			// 
