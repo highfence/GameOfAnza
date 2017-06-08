@@ -76,5 +76,13 @@ namespace GameOfAnza_WindowForm_
 				ResultBox.Visible = true;
 			}
 		}
+
+		/*
+		 * 유사 RouteName을 선택하였을 때 발생하는 이벤트.
+		 */ 
+		private void ResultBox_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			var selectedRouteNm = ResultBox.SelectedItem;
+		}
 	}
 }

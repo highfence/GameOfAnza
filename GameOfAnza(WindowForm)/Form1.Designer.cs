@@ -70,6 +70,7 @@
 			this.ResultBox.Name = "ResultBox";
 			this.ResultBox.Size = new System.Drawing.Size(206, 100);
 			this.ResultBox.TabIndex = 3;
+			this.ResultBox.SelectedIndexChanged += new System.EventHandler(this.ResultBox_SelectedIndexChanged);
 			// 
 			// Form1
 			// 
