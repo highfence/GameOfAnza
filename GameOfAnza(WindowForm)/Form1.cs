@@ -21,6 +21,9 @@ namespace GameOfAnza_WindowForm_
 			// 싱글톤 클래스들 초기화.
 			MongoDBManager.GetInstance();
 			HttpNetwork.GetInstance();
+
+			// 결과박스 보이지 않도록.
+			ResultBox.Visible = false;
 		}
 
 		private void SearchButton_Click(object sender, EventArgs e)
@@ -43,6 +46,35 @@ namespace GameOfAnza_WindowForm_
 			int searchRouteId = HttpNetwork.GetInstance().GetBusRouteList(searchStr);
 			int searchRouteDayDriveNm = HttpNetwork.GetInstance().GetRouteDayDrivenNm(searchRouteId);
 			var list = HttpNetwork.GetInstance().GetStationsByRouteList(searchRouteId);
+		}
+
+		/*
+		 * SearchBox에 검색어가 없다면, ListBox를 보이지 않도록 함.
+		 * 검색어가 존재한다면, 그에 맞는 유사 검색어들을 리스트박스에 추가해줌.		 
+		 */
+		private void SearchBox_TextChanged(object sender, EventArgs e)
+		{
+			if (SearchBox.Text == "")
+			{
+				ResultBox.Visible = false;
+			}
+			else
+			{
+				ResultBox.Items.Clear();
+
+				var similarNameRouteList = HttpNetwork.GetInstance().GetBusRouteListLike(SearchBox.Text);
+				if (similarNameRouteList == null)
+				{
+					return;
+				}
+
+				foreach (string similarNameRoute in similarNameRouteList)
+				{
+					ResultBox.Items.Add(similarNameRoute);
+				}
+
+				ResultBox.Visible = true;
+			}
 		}
 	}
 }

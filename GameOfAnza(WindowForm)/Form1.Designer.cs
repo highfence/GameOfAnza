@@ -31,6 +31,7 @@
 			this.SearchBox = new System.Windows.Forms.TextBox();
 			this.SearchInstLabel = new System.Windows.Forms.Label();
 			this.SearchButton = new System.Windows.Forms.Button();
+			this.ResultBox = new System.Windows.Forms.ListBox();
 			this.SuspendLayout();
 			// 
 			// SearchBox
@@ -39,6 +40,7 @@
 			this.SearchBox.Name = "SearchBox";
 			this.SearchBox.Size = new System.Drawing.Size(206, 21);
 			this.SearchBox.TabIndex = 0;
+			this.SearchBox.TextChanged += new System.EventHandler(this.SearchBox_TextChanged);
 			this.SearchBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SearchBox_KeyDown);
 			// 
 			// SearchInstLabel
@@ -60,11 +62,21 @@
 			this.SearchButton.UseVisualStyleBackColor = true;
 			this.SearchButton.Click += new System.EventHandler(this.SearchButton_Click);
 			// 
+			// ResultBox
+			// 
+			this.ResultBox.FormattingEnabled = true;
+			this.ResultBox.ItemHeight = 12;
+			this.ResultBox.Location = new System.Drawing.Point(26, 54);
+			this.ResultBox.Name = "ResultBox";
+			this.ResultBox.Size = new System.Drawing.Size(206, 100);
+			this.ResultBox.TabIndex = 3;
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1184, 761);
+			this.Controls.Add(this.ResultBox);
 			this.Controls.Add(this.SearchButton);
 			this.Controls.Add(this.SearchInstLabel);
 			this.Controls.Add(this.SearchBox);
@@ -80,6 +92,7 @@
 		private System.Windows.Forms.TextBox SearchBox;
 		private System.Windows.Forms.Label SearchInstLabel;
 		private System.Windows.Forms.Button SearchButton;
+		private System.Windows.Forms.ListBox ResultBox;
 	}
 }
 

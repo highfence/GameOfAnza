@@ -197,6 +197,35 @@ namespace GameOfAnza_WindowForm_
 		}
 
 		/*
+		 * 노선의 이름을 넣으면 그와 비슷한 노선의 이름을 반환해주는 함수.
+		 */
+		public List<string> GetBusRouteListLike(string stationName)
+		{
+			if (stationName == null) return null;
+
+			// stationName으로 Http 요청을 보냄.
+			string routeListString = HttpRequest(APICODE.GET_BUS_ROUTE_LIST, stationName, true);
+			if (routeListString == null) return null;
+
+			// 받은 응답을 XmlDocument로 로드.
+			XmlDocument xmlDoc = new XmlDocument();
+			xmlDoc.LoadXml(routeListString);
+
+			// Xml 파일을 파싱하여 원하는 Route의 아이디 찾기.
+			XmlNodeList xmlNodeList = xmlDoc.SelectNodes("ServiceResult/msgBody/itemList");
+
+			var findBusRouteId = from XmlNode xn in xmlNodeList
+								 select xn["busRouteNm"].InnerText;
+
+			if (findBusRouteId.Any())
+			{
+				return findBusRouteId.ToList();
+			}
+			else return null;
+		}
+
+
+		/*
 		 * 노선의 아이디 (BusRouteId)를 넣으면 하루에 할당된 배차량을 반환해주는 함수.
 		 * 정부 API의 GetRouteInfo를 이용.
 		 * 첫차시간과 막차시간의 차이를 배차간격으로 나눠준다.
