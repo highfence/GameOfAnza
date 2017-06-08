@@ -79,27 +79,32 @@ namespace GameOfAnza_WindowForm_
 
 		private bool Connect()
 		{
-			_credential = MongoCredential.CreateCredential("bus", "next", "dlrmsdnjs93");
+			_credential = MongoCredential.CreateCredential(_database, _user, _pwd);
 
 			_settings = new MongoClientSettings
 			{
 				Credentials = new[] { _credential },
-				Server = new MongoServerAddress("211.249.60.64", 27017)
+				Server = new MongoServerAddress(_serverIp, _port)
 			};
 
 			_mongoClient = new MongoClient(_settings);
-			_mongoDatabase = _mongoClient.GetDatabase("bus");
+			_mongoDatabase = _mongoClient.GetDatabase(_database);
 
-			var collection = _mongoDatabase.GetCollection<InOutData>("bus_in_out_test");
+			return true;
+		}
 
-			var list = collection.Find(x => x.STND_BSST_ID == 105900027).ToList();
+		public List<InOutData> FindWithStationId(int stationId)
+		{
+			var collection = _mongoDatabase.GetCollection<InOutData>("bus_in_out");
+
+			var list = collection.Find(x => x.STND_BSST_ID == stationId).ToList();
 
 			foreach (var st in list)
 			{
 				Debug.Write(st.USE_DT);
 			}
 
-			return true;
+			return list;
 		}
 	}
 }
