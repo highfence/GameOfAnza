@@ -75,12 +75,16 @@ namespace GameOfAnza_WindowForm_
 		}
 
 		// 노선에 속해있는 역 정보를 담을 구조체
-		public struct RouteStationInfo
+		public class RouteStationInfo
 		{
 			public int arsId;
 			public int stationId;
 			public string stationNm;
 			public int seq;
+			public int rideNum;
+			public int alightNum;
+			public int accRideNum;
+			public int accAlightNum;
 		}
 
 
@@ -317,6 +321,10 @@ namespace GameOfAnza_WindowForm_
 					stationInfo.seq = Convert.ToInt32(xn["seq"].InnerText);
 					stationInfo.stationId = Convert.ToInt32(xn["station"].InnerText);
 					stationInfo.stationNm = xn["stationNm"].InnerText;
+					stationInfo.rideNum = 0;
+					stationInfo.alightNum = 0;
+					stationInfo.accRideNum = 0;
+					stationInfo.accAlightNum = 0;
 
 					stationInfoList.Add(stationInfo);
 				}

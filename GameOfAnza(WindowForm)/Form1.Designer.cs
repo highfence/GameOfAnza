@@ -32,6 +32,10 @@
 			this.SearchInstLabel = new System.Windows.Forms.Label();
 			this.SearchButton = new System.Windows.Forms.Button();
 			this.ResultBox = new System.Windows.Forms.ListBox();
+			this.TabControl = new System.Windows.Forms.TabControl();
+			this.tabPage1 = new System.Windows.Forms.TabPage();
+			this.tabPage2 = new System.Windows.Forms.TabPage();
+			this.TabControl.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// SearchBox
@@ -72,17 +76,49 @@
 			this.ResultBox.TabIndex = 3;
 			this.ResultBox.SelectedIndexChanged += new System.EventHandler(this.ResultBox_SelectedIndexChanged);
 			// 
+			// TabControl
+			// 
+			this.TabControl.Controls.Add(this.tabPage1);
+			this.TabControl.Controls.Add(this.tabPage2);
+			this.TabControl.Location = new System.Drawing.Point(26, 63);
+			this.TabControl.Name = "TabControl";
+			this.TabControl.SelectedIndex = 0;
+			this.TabControl.Size = new System.Drawing.Size(1146, 686);
+			this.TabControl.TabIndex = 4;
+			// 
+			// tabPage1
+			// 
+			this.tabPage1.Location = new System.Drawing.Point(4, 22);
+			this.tabPage1.Name = "tabPage1";
+			this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPage1.Size = new System.Drawing.Size(1138, 660);
+			this.tabPage1.TabIndex = 0;
+			this.tabPage1.Text = "tabPage1";
+			this.tabPage1.UseVisualStyleBackColor = true;
+			// 
+			// tabPage2
+			// 
+			this.tabPage2.Location = new System.Drawing.Point(4, 22);
+			this.tabPage2.Name = "tabPage2";
+			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPage2.Size = new System.Drawing.Size(1138, 660);
+			this.tabPage2.TabIndex = 1;
+			this.tabPage2.Text = "tabPage2";
+			this.tabPage2.UseVisualStyleBackColor = true;
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1184, 761);
+			this.Controls.Add(this.TabControl);
 			this.Controls.Add(this.ResultBox);
 			this.Controls.Add(this.SearchButton);
 			this.Controls.Add(this.SearchInstLabel);
 			this.Controls.Add(this.SearchBox);
 			this.Name = "Form1";
 			this.Text = "Game Of Anza";
+			this.TabControl.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -94,6 +130,9 @@
 		private System.Windows.Forms.Label SearchInstLabel;
 		private System.Windows.Forms.Button SearchButton;
 		private System.Windows.Forms.ListBox ResultBox;
+		private System.Windows.Forms.TabControl TabControl;
+		private System.Windows.Forms.TabPage tabPage1;
+		private System.Windows.Forms.TabPage tabPage2;
 	}
 }
 

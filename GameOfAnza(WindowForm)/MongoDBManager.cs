@@ -86,6 +86,7 @@ namespace GameOfAnza_WindowForm_
 		private MongoClientSettings _settings;
 		private MongoClient _mongoClient;
 		private IMongoDatabase _mongoDatabase;
+		private IMongoCollection<BsonDocument> _collection;
 
 		// Xml파일에 기록된 정보에 따라 접속을 시도하는 메소드.
 		private bool Connect()
@@ -103,6 +104,7 @@ namespace GameOfAnza_WindowForm_
 				_mongoClient = new MongoClient(_settings);
 				_mongoDatabase = _mongoClient.GetDatabase(_database);
 
+				_collection = _mongoDatabase.GetCollection<BsonDocument>("bus_in_out");
 				return true;
 			}
 			catch
@@ -111,19 +113,32 @@ namespace GameOfAnza_WindowForm_
 			}
 		}
 
-		// STND_BSSN_ID로 검색한 결과는 List<InOutData> 형태로 반환하는 메소드.
+		// STND_BSSN_ID로 검색한 결과를 List<InOutData> 형태로 반환하는 메소드.
 		public List<InOutData> FindWithStationId(int stationId)
 		{
 			var collection = _mongoDatabase.GetCollection<InOutData>("bus_in_out");
 
 			var list = collection.Find(x => x.STND_BSST_ID == stationId).ToList();
 
-			foreach (var st in list)
+			return list;
+		}
+
+		// 인자로 받은 정류장 ID의 승, 하차 인원을 반환하는 메소드.
+		public Tuple<int, int> FindPassengerNumberWithStationId(int stationId)
+		{
+			var filter = Builders<BsonDocument>.Filter.Eq("STND_BSST_ID", stationId);
+			var list = _collection.Find(filter).ToList();
+			int totalRidePassenger = 0;
+			int totalAlightPassenger = 0;
+
+			foreach (var dataLog in list)
 			{
-				Debug.Write(st.USE_DT);
+				var a = dataLog.GetElement(7).Value;
+				// totalRidePassenger += dataLog
+				// totalAlightPassenger += dataLog.ALIGHT_PASGR_NUM;
 			}
 
-			return list;
+			return new Tuple<int, int>(totalRidePassenger, totalAlightPassenger);
 		}
 	}
 }

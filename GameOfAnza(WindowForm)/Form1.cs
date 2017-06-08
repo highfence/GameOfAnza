@@ -24,6 +24,9 @@ namespace GameOfAnza_WindowForm_
 
 			// 결과박스 보이지 않도록.
 			ResultBox.Visible = false;
+
+			// 탭 보이지 않도록.
+			TabControl.Visible = false;
 		}
 
 		private void SearchButton_Click(object sender, EventArgs e)
@@ -42,10 +45,39 @@ namespace GameOfAnza_WindowForm_
 		private void SearchStart()
 		{
 			searchStr = SearchBox.Text;
+			TabControl.Visible = true;
 
 			int searchRouteId = HttpNetwork.GetInstance().GetBusRouteList(searchStr);
 			int searchRouteDayDriveNm = HttpNetwork.GetInstance().GetRouteDayDrivenNm(searchRouteId);
-			var list = HttpNetwork.GetInstance().GetStationsByRouteList(searchRouteId);
+			var routeList = HttpNetwork.GetInstance().GetStationsByRouteList(searchRouteId);
+
+			// route에 있는 station의 승, 하차 총 승객수를 구해준다.
+			foreach (var station in routeList)
+			{
+				Tuple<int, int> passengerNum = MongoDBManager.GetInstance().FindPassengerNumberWithStationId(station.stationId);
+
+				station.rideNum = passengerNum.Item1;
+				station.alightNum = passengerNum.Item2;
+			}
+
+			// station의 누적 승객수를 구해준다. 
+			int lastStationSeq = routeList.Count();
+			foreach (var station in routeList)
+			{
+				if (station.seq == 1)
+				{
+					station.accRideNum = station.rideNum;
+					station.accAlightNum = station.alightNum;
+				}
+				else  if (station.seq == lastStationSeq)
+				{
+
+				}
+				else
+				{
+
+				}
+			}
 		}
 
 		/*
@@ -83,6 +115,8 @@ namespace GameOfAnza_WindowForm_
 		private void ResultBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			var selectedRouteNm = ResultBox.SelectedItem;
+			SearchBox.Text = selectedRouteNm.ToString();
+			ResultBox.Visible = false;
 		}
 	}
 }
