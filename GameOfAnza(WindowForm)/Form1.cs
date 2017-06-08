@@ -17,6 +17,8 @@ namespace GameOfAnza_WindowForm_
 		public Form1()
 		{
 			InitializeComponent();
+
+			MongoDBManager.GetInstance();
 		}
 
 		private void SearchButton_Click(object sender, EventArgs e)

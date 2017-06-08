@@ -85,7 +85,7 @@ namespace GameOfAnza_WindowForm_
 
 
 		// 정부 API 관련 데이터가 저장된 파일.
-		private string filePath = "C:/Users/NEXT/Desktop/Project/GameOfAnza(WindowForm)/GameOfAnza(WindowForm)/Resources/KeyValues.xml";
+		private string filePath = "../../Resources/KeyValues.xml";
 		// 정부 API 관련 데이터를 저장할 구조체.
 		private APIData[] apiData = new APIData[(int)APICODE.APICODE_NUM];
 
