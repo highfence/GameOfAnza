@@ -51,7 +51,7 @@ namespace GameOfAnza_WindowForm_
 			TabControl.Visible = true;
 
 			int searchRouteId = HttpNetwork.GetInstance().GetBusRouteList(searchStr);
-			int searchRouteDayDriveNm = HttpNetwork.GetInstance().GetRouteDayDrivenNm(searchRouteId);
+			int routeDayDriveNm = HttpNetwork.GetInstance().GetRouteDayDrivenNm(searchRouteId);
 			var routeList = HttpNetwork.GetInstance().GetStationsByRouteList(searchRouteId);
 
 			// 노선의 마지막 역의 넘버를 나타내는 변수.
@@ -83,7 +83,7 @@ namespace GameOfAnza_WindowForm_
 				if (station.seq == 1)
 				{
 					station.remainPassenger = station.rideNum - station.alightNum;
-					station.averageRemainPassenger = station.remainPassenger / searchRouteDayDriveNm;
+					station.averageRemainPassenger = station.remainPassenger / routeDayDriveNm;
 					totalRemainPassenger += station.averageRemainPassenger;
 					previousRemainPassenger = station.remainPassenger;
 				}
@@ -94,32 +94,46 @@ namespace GameOfAnza_WindowForm_
 				else
 				{
 					station.remainPassenger = previousRemainPassenger + station.rideNum - station.alightNum;
-					station.averageRemainPassenger = station.remainPassenger / searchRouteDayDriveNm;
+					station.averageRemainPassenger = station.remainPassenger / routeDayDriveNm;
 					totalRemainPassenger += station.averageRemainPassenger;
 					previousRemainPassenger = station.remainPassenger;
 				}
 			}
 
 			// 노선 전체 평균 인원 점수.
-			float anzaScore = (totalRemainPassenger / lastStationSeq) / 40;
+			float anzaScore = (totalRemainPassenger / lastStationSeq) / 20;
 
-			MakeAnzaScoreTab(routeList, anzaScore);
+			MakeAnzaScoreTab(routeList, anzaScore, routeDayDriveNm);
 
 		}
 
 		/*
 		 * 컨트롤 탭에 앉아 점수를 만드는 메소드.
 		 */
-		private void MakeAnzaScoreTab(List<HttpNetwork.RouteStationInfo> routeList, float anzaScore)
+		private void MakeAnzaScoreTab(List<HttpNetwork.RouteStationInfo> routeList, float anzaScore, int routeDayDriveNm)
 		{
 			// 앉아 점수 공개!
-			AnzaScoreLabel.Text = "앉아 점수 : " + anzaScore;
+			AnzaScoreLabel.Text = "노선 앉아 점수 : " + anzaScore;
 
 			// 앉아 점수에 맞는 표정 로드.
-			string anzaFaceFilePath = "../../Resources/" + selectFace(anzaScore).ToString() + ".png";
-			var src = ResizeImage((Bitmap)Bitmap.FromFile(anzaFaceFilePath), AnzaImage.Width, AnzaImage.Height);
-			AnzaImage.Image = src;
+			FaceLoadAccordWithScore(AnzaImage, anzaScore);
+
+			// 가장 앉기 쉬운 역 공개!
+			LoadHeavenTopThreeStation(routeList, routeDayDriveNm);
+			// 어려운 역도 공개!
+			LoadHellTopThreeStation(routeList, routeDayDriveNm);
+;
+			
 		}
+
+		// Image에 알맞은 아이콘을 넣어주는 함수.
+		private void FaceLoadAccordWithScore(PictureBox img, float score)
+		{
+			string anzaFaceFilePath = "../../Resources/" + selectFace(score).ToString() + ".png";
+			var src = ResizeImage((Bitmap)Bitmap.FromFile(anzaFaceFilePath), img.Width, img.Height);
+			img.Image = src;
+		}
+
 
 		/*
 		 * SearchBox에 검색어가 없다면, ListBox를 보이지 않도록 함.
@@ -128,6 +142,10 @@ namespace GameOfAnza_WindowForm_
 		private void SearchBox_TextChanged(object sender, EventArgs e)
 		{
 			if (SearchBox.Text == "")
+			{
+				ResultBox.Visible = false;
+			}
+			else if (SearchBox.Text.Length < 2)
 			{
 				ResultBox.Visible = false;
 			}
@@ -151,6 +169,66 @@ namespace GameOfAnza_WindowForm_
 		}
 
 		/*
+		 * routeList에서 가장 평균 인원이 많은 세 역의 seq을 찾아주는 함수. 
+		 */
+		private void LoadHellTopThreeStation(List<HttpNetwork.RouteStationInfo> routeList, int routeDayDriveNm)
+		{
+			// 소팅해줌.
+			routeList.Sort(
+				delegate (HttpNetwork.RouteStationInfo r1, HttpNetwork.RouteStationInfo r2) 
+				{ return r2.remainPassenger.CompareTo(r1.remainPassenger); });
+
+			HellSt1.Text = routeList.ElementAt(0).stationNm;
+			HellSt2.Text = routeList.ElementAt(1).stationNm;
+			HellSt3.Text = routeList.ElementAt(2).stationNm;
+
+			float score1 = ValueCorrectionToPositive(routeList.ElementAt(0).remainPassenger / (20 * routeDayDriveNm));
+			float score2 = ValueCorrectionToPositive(routeList.ElementAt(1).remainPassenger / (20 * routeDayDriveNm));
+			float score3 = ValueCorrectionToPositive(routeList.ElementAt(2).remainPassenger / (20 * routeDayDriveNm));
+
+			HellScore1.Text = "앉아 점수 : " + score1;
+			HellScore2.Text = "앉아 점수 : " + score2;
+			HellScore3.Text = "앉아 점수 : " + score3;
+
+			FaceLoadAccordWithScore(HellImg1, score1);
+			FaceLoadAccordWithScore(HellImg2, score2);
+			FaceLoadAccordWithScore(HellImg3, score3); ;
+		}
+
+		/*
+		 * routeList에서 가장 평균 인원이 적은 세 역의 seq를 찾아주는 함수.
+		 */
+		private void LoadHeavenTopThreeStation(List<HttpNetwork.RouteStationInfo> routeList, int routeDayDriveNm)
+		{
+			// 역으로 소팅해줌
+			routeList.Sort(
+				delegate (HttpNetwork.RouteStationInfo r1, HttpNetwork.RouteStationInfo r2) 
+				{ return r1.remainPassenger.CompareTo(r2.remainPassenger); });
+
+			HeavenSt1.Text = routeList.ElementAt(0).stationNm;
+			HeavenSt2.Text = routeList.ElementAt(1).stationNm;
+			HeavenSt3.Text = routeList.ElementAt(2).stationNm;
+
+			float score1 = ValueCorrectionToPositive(routeList.ElementAt(0).remainPassenger / (20 * routeDayDriveNm));
+			float score2 = ValueCorrectionToPositive(routeList.ElementAt(1).remainPassenger / (20 * routeDayDriveNm));
+			float score3 = ValueCorrectionToPositive(routeList.ElementAt(2).remainPassenger / (20 * routeDayDriveNm));
+
+			HeavenScore1.Text = "앉아 점수 : " + score1;
+			HeavenScore2.Text = "앉아 점수 : " + score2;
+			HeavenScore3.Text = "앉아 점수 : " + score3;
+
+			FaceLoadAccordWithScore(HeavenImg1, score1);
+			FaceLoadAccordWithScore(HeavenImg2, score2);
+			FaceLoadAccordWithScore(HeavenImg3, score3);
+		}
+
+		private float ValueCorrectionToPositive(float value)
+		{
+			if (value < 0) return 0;
+			return value;
+		}
+
+		/*
 		 * 유사 RouteName을 선택하였을 때 발생하는 이벤트.
 		 */ 
 		private void ResultBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -168,12 +246,12 @@ namespace GameOfAnza_WindowForm_
 		// 앉아 점수에 따른 이모티콘을 반환해주는 함수.
 		private int selectFace(float anzaScore)
 		{
-			if (anzaScore >= 9.0) return 7;
-			else if (anzaScore >= 8.0) return 6;
-			else if (anzaScore >= 6.5) return 5;
-			else if (anzaScore >= 4.5) return 4;
-			else if (anzaScore >= 3.75) return 3;
-			else if (anzaScore >= 2.0) return 2;
+			if (anzaScore >= 15.0) return 7;
+			else if (anzaScore >= 13.0) return 6;
+			else if (anzaScore >= 10.5) return 5;
+			else if (anzaScore >= 8.5) return 4;
+			else if (anzaScore >= 5) return 3;
+			else if (anzaScore >= 3.0) return 2;
 			else return 1;
 		}
 
