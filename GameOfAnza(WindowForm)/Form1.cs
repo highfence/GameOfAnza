@@ -17,9 +17,20 @@ namespace GameOfAnza_WindowForm_
 		public Form1()
 		{
 			InitializeComponent();
+			DatabaseManager.GetInstance();
 		}
 
 		private void SearchButton_Click(object sender, EventArgs e)
+		{
+			Searching();
+		}
+
+		private void SearchBox_Enter(object sender, EventArgs e)
+		{
+			Searching();
+		}
+
+		private void Searching()
 		{
 			searchStr = SearchBox.Text;
 
