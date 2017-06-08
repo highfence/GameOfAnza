@@ -57,8 +57,10 @@
 			this.HellScore2 = new System.Windows.Forms.Label();
 			this.HellSt3 = new System.Windows.Forms.Label();
 			this.HellScore3 = new System.Windows.Forms.Label();
+			this.RouteGridView = new System.Windows.Forms.DataGridView();
 			this.TabControl.SuspendLayout();
 			this.tabPage1.SuspendLayout();
+			this.tabPage2.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.AnzaImage)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.HeavenImg1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.HeavenImg2)).BeginInit();
@@ -66,6 +68,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.HellImg1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.HellImg2)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.HellImg3)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.RouteGridView)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// SearchBox
@@ -150,6 +153,7 @@
 			// 
 			// tabPage2
 			// 
+			this.tabPage2.Controls.Add(this.RouteGridView);
 			this.tabPage2.Location = new System.Drawing.Point(4, 22);
 			this.tabPage2.Name = "tabPage2";
 			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -364,6 +368,15 @@
 			this.HellScore3.TabIndex = 21;
 			this.HellScore3.Text = "label12";
 			// 
+			// RouteGridView
+			// 
+			this.RouteGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.RouteGridView.Location = new System.Drawing.Point(6, 6);
+			this.RouteGridView.Name = "RouteGridView";
+			this.RouteGridView.RowTemplate.Height = 23;
+			this.RouteGridView.Size = new System.Drawing.Size(531, 648);
+			this.RouteGridView.TabIndex = 0;
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
@@ -379,6 +392,7 @@
 			this.TabControl.ResumeLayout(false);
 			this.tabPage1.ResumeLayout(false);
 			this.tabPage1.PerformLayout();
+			this.tabPage2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.AnzaImage)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.HeavenImg1)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.HeavenImg2)).EndInit();
@@ -386,6 +400,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.HellImg1)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.HellImg2)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.HellImg3)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.RouteGridView)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -422,6 +437,7 @@
 		private System.Windows.Forms.Label HeavenSt2;
 		private System.Windows.Forms.Label HeavenScore1;
 		private System.Windows.Forms.Label HeavenSt1;
+		private System.Windows.Forms.DataGridView RouteGridView;
 	}
 }
 

@@ -47,6 +47,7 @@ namespace GameOfAnza_WindowForm_
 
 		private void SearchStart()
 		{
+			ResultBox.Visible = false;
 			searchStr = SearchBox.Text;
 			TabControl.Visible = true;
 
@@ -119,21 +120,60 @@ namespace GameOfAnza_WindowForm_
 			FaceLoadAccordWithScore(AnzaImage, anzaScore);
 
 			// 가장 앉기 쉬운 역 공개!
-			LoadHeavenTopThreeStation(routeList, routeDayDriveNm);
+			LoadHeavenTopThreeStation(routeList);
 			// 어려운 역도 공개!
-			LoadHellTopThreeStation(routeList, routeDayDriveNm);
+			LoadHellTopThreeStation(routeList);
 ;
-			
+			// 노선별 점수도 공개!
+			FillRouteGridView(routeList, routeDayDriveNm);
 		}
 
 		// Image에 알맞은 아이콘을 넣어주는 함수.
 		private void FaceLoadAccordWithScore(PictureBox img, float score)
 		{
-			string anzaFaceFilePath = "../../Resources/" + selectFace(score).ToString() + ".png";
+			string anzaFaceFilePath = "../../Resources/" + SelectFace(score).ToString() + ".png";
 			var src = ResizeImage((Bitmap)Bitmap.FromFile(anzaFaceFilePath), img.Width, img.Height);
 			img.Image = src;
 		}
 
+		// 두 번째 탭의 DataGridView를 채우는 함수.
+		private void FillRouteGridView(List<HttpNetwork.RouteStationInfo> routeList, int routeDayDriveNm)
+		{
+			// 데이터 그리드 뷰 세팅.
+			SetupRouteGridView();
+			RouteGridView.Rows.Clear();
+
+			// 루트 리스트를 seq에 대해 소팅.
+			routeList.Sort(
+				delegate (HttpNetwork.RouteStationInfo r1, HttpNetwork.RouteStationInfo r2) 
+				{ return r1.seq.CompareTo(r2.seq); });
+
+			int rowIndex = 0;
+			foreach (var stationInfo in routeList)
+			{
+				int seq = stationInfo.seq;
+				string stationNm = stationInfo.stationNm;
+				float score = ValueCorrectionToPositive(stationInfo.averageRemainPassenger / 20);
+				int ridePssn = stationInfo.rideNum;
+				int alightPssn = stationInfo.alightNum;
+
+				RouteGridView.Rows.Add(seq, stationNm, score, ridePssn, alightPssn);
+				RouteGridView.Rows[rowIndex].Cells[2].Style.BackColor = SelectColor(score);
+				++rowIndex;
+			}
+
+		}
+
+		// RouteGridView세팅
+		private void SetupRouteGridView()
+		{
+			RouteGridView.ColumnCount = 5;
+			RouteGridView.Columns[0].Name = "순서";
+			RouteGridView.Columns[1].Name = "정류장 이름";
+			RouteGridView.Columns[2].Name = "앉아 점수";
+			RouteGridView.Columns[3].Name = "탑승 승객 수";
+			RouteGridView.Columns[4].Name = "하차 승객 수";
+		}
 
 		/*
 		 * SearchBox에 검색어가 없다면, ListBox를 보이지 않도록 함.
@@ -171,7 +211,7 @@ namespace GameOfAnza_WindowForm_
 		/*
 		 * routeList에서 가장 평균 인원이 많은 세 역의 seq을 찾아주는 함수. 
 		 */
-		private void LoadHellTopThreeStation(List<HttpNetwork.RouteStationInfo> routeList, int routeDayDriveNm)
+		private void LoadHellTopThreeStation(List<HttpNetwork.RouteStationInfo> routeList)
 		{
 			// 소팅해줌.
 			routeList.Sort(
@@ -182,9 +222,9 @@ namespace GameOfAnza_WindowForm_
 			HellSt2.Text = routeList.ElementAt(1).stationNm;
 			HellSt3.Text = routeList.ElementAt(2).stationNm;
 
-			float score1 = ValueCorrectionToPositive(routeList.ElementAt(0).remainPassenger / (20 * routeDayDriveNm));
-			float score2 = ValueCorrectionToPositive(routeList.ElementAt(1).remainPassenger / (20 * routeDayDriveNm));
-			float score3 = ValueCorrectionToPositive(routeList.ElementAt(2).remainPassenger / (20 * routeDayDriveNm));
+			float score1 = ValueCorrectionToPositive(routeList.ElementAt(0).averageRemainPassenger / 20);
+			float score2 = ValueCorrectionToPositive(routeList.ElementAt(1).averageRemainPassenger / 20);
+			float score3 = ValueCorrectionToPositive(routeList.ElementAt(2).averageRemainPassenger / 20);
 
 			HellScore1.Text = "앉아 점수 : " + score1;
 			HellScore2.Text = "앉아 점수 : " + score2;
@@ -198,7 +238,7 @@ namespace GameOfAnza_WindowForm_
 		/*
 		 * routeList에서 가장 평균 인원이 적은 세 역의 seq를 찾아주는 함수.
 		 */
-		private void LoadHeavenTopThreeStation(List<HttpNetwork.RouteStationInfo> routeList, int routeDayDriveNm)
+		private void LoadHeavenTopThreeStation(List<HttpNetwork.RouteStationInfo> routeList)
 		{
 			// 역으로 소팅해줌
 			routeList.Sort(
@@ -209,9 +249,9 @@ namespace GameOfAnza_WindowForm_
 			HeavenSt2.Text = routeList.ElementAt(1).stationNm;
 			HeavenSt3.Text = routeList.ElementAt(2).stationNm;
 
-			float score1 = ValueCorrectionToPositive(routeList.ElementAt(0).remainPassenger / (20 * routeDayDriveNm));
-			float score2 = ValueCorrectionToPositive(routeList.ElementAt(1).remainPassenger / (20 * routeDayDriveNm));
-			float score3 = ValueCorrectionToPositive(routeList.ElementAt(2).remainPassenger / (20 * routeDayDriveNm));
+			float score1 = ValueCorrectionToPositive(routeList.ElementAt(0).averageRemainPassenger / 20);
+			float score2 = ValueCorrectionToPositive(routeList.ElementAt(1).averageRemainPassenger / 20);
+			float score3 = ValueCorrectionToPositive(routeList.ElementAt(2).averageRemainPassenger / 20);
 
 			HeavenScore1.Text = "앉아 점수 : " + score1;
 			HeavenScore2.Text = "앉아 점수 : " + score2;
@@ -244,7 +284,7 @@ namespace GameOfAnza_WindowForm_
 		}
 
 		// 앉아 점수에 따른 이모티콘을 반환해주는 함수.
-		private int selectFace(float anzaScore)
+		private int SelectFace(float anzaScore)
 		{
 			if (anzaScore >= 15.0) return 7;
 			else if (anzaScore >= 13.0) return 6;
@@ -253,6 +293,18 @@ namespace GameOfAnza_WindowForm_
 			else if (anzaScore >= 5) return 3;
 			else if (anzaScore >= 3.0) return 2;
 			else return 1;
+		}
+
+		// 앉아 점수에 따른 색상을 반환해주는 함수.
+		private Color SelectColor(float anzaScore)
+		{
+			if (anzaScore >= 15.0) return Color.Maroon;
+			else if (anzaScore >= 13.0) return Color.Crimson;
+			else if (anzaScore >= 10.5) return Color.Orange;
+			else if (anzaScore >= 8.5) return Color.Yellow;
+			else if (anzaScore >= 5) return Color.GreenYellow;
+			else if (anzaScore >= 3.0) return Color.LawnGreen;
+			else return Color.PaleGreen;
 		}
 
 		/*
